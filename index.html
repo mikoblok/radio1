@@ -1,127 +1,41 @@
-<html lang="en"><head>
-  <meta charset="utf-8">
-  <title>mikoblok - RADIO 1</title>
-  <meta name="description" content="LIVE">
-  <meta name="author" content="LIVE">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/css/broadcastplayer.css">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&amp;display=swap" rel="stylesheet">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mikoblok</title>
+    <style>
+        img {
+            width: 20vw;
+        }
+
+        body {
+            font-family: "arial", sans-serif;
+            display: flex;
+            align-items: center;
+        }
+    </style>
 </head>
+
 <body>
-<div class="player paused">
-  <div class="album">
-    <div class="cover">
-      <div><img id="cover" src="/images/buy/slipmat_logocircle.png" data-nsfw-filter-status="sfw" style="visibility: visible;"></div>
-    </div>
-  </div>
-  <div class="equalizer" style="display: block;">
-    <img class="eq-on" src="/images/profiles/equalizer.gif" data-nsfw-filter-status="sfw" style="visibility: visible;">
-    <img class="eq-off" src="/images/profiles/equalizer_paused.gif" data-nsfw-filter-status="sfw" style="visibility: visible;">
-  </div>
-  <div class="loading" style="display: none;">
-    <img src="https://www.virtualdj.com/images/v9/frontpage/spinner.gif" data-nsfw-filter-status="sfw" style="visibility: visible;">
-  </div>
-  <div class="info">
-    <h1 id="status">- Press Play -</h1>
-    <h2>user25626926</h2>
-  </div>
-  <div class="actions">
-    <button class="playerbtn rw">
-      <div class="arrow"></div>
-      <div class="arrow"></div>
-    </button>
-    <button class="playerbtn play-pause">
-      <div class="arrow"></div>
-    </button>
-    <button class="playerbtn ff">
-      <div class="arrow"></div>
-      <div class="arrow"></div>
-    </button>
-  </div>
-  <audio allow="autoplay" preload="auto" src="http://77.255.182.53:8000/listen.mp3" autoplay=""></audio>
-</div>
-  <script src=""></script>
-<script type="text/javascript">
-  var player = $(".player"),
-  audio = player.find("audio"),
-  mouseDown = false,
-  rewind;
-audio
-  .on("loadedmetadata", function () {
-  })
-  .on("canplay", function () {
-      $(".loading").hide(); 
-      $(".equalizer").show();
-      $("#status").text("- Press Play -");
-      $("button").click(); 
-  })
-  .on("pause", function () {
-      $("#status").text("- Paused -");
-  })
-  .on("error", function () {
-  	  $(".loading").hide(); 
-      $(".equalizer").show();
-      $("#status").text("OFF AIR");
-  })
-  .on("playing", function () {
-      $(".equalizer").show();
-      $("#status").text("ON AIR");
-  })
-  .on("ended", function () {
-      player.removeClass("playing").addClass("paused");
-      audio[0].currentTime = 0;
-      $("#status").text("Ended");
-  });
-$("button")
-  .on("click", function () {
-    var self = $(this);
-    if (self.hasClass("play-pause") && player.hasClass("paused")) {
-      var promise = audio[0].play(); 
-      if (promise !== undefined) {
-        promise.then(_ => {
-            player.removeClass("paused").addClass("playing");
-        }).catch(error => {
-           player.removeClass("playing").addClass("paused");
-           $(".loading").hide();
-           audio[0].pause(); // can not autoplay
-        });
-      }
-    } else if (self.hasClass("play-pause") && player.hasClass("playing")) {
-      player.removeClass("playing").addClass("paused");
-      audio[0].pause();
-    }
-  })
-  .on("mousedown", function () {
-    var self = $(this);
-    if (self.hasClass("ff")) {
-      player.addClass("ffing");
-      audio[0].playbackRate = 2;
-    }
-    if (self.hasClass("rw")) {
-      player.addClass("rwing");
-      rewind = setInterval(function () {
-        audio[0].currentTime -= 0.3;
-      }, 100);
-    }
-  })
-  .on("mouseup", function () {
-    var self = $(this);
-    if (self.hasClass("ff")) {
-      player.removeClass("ffing");
-      audio[0].playbackRate = 1;
-    }
-    if (self.hasClass("rw")) {
-      player.removeClass("rwing");
-      clearInterval(rewind);
-    }
-  });
+    <img src="./mikoblok_nb.png" alt="Mikoblok"><audio id="audio" allow="autoplay" preload="auto"
+        src="http://77.255.182.53:8000/listen.mp3" autoplay=""></audio>
+    <span id="status">Brak transmisji</span>.  Radio transmitowane dzięki:    <a href="https://onlineradio.pl/" target="_blank"><img src="rl.png" alt="onlineradio.pl/" ></a>
+    <script>
+        var audio = document.getElementsByTagName("audio")[0];
+        var status = document.getElementById("status")
+        audio.onerror = function () {
+            status.innerText = "Brak transmisji"
+        }
+        audio.onplaying = function () {
+            status.innerText = "Słuchasz radia Mikoblok"
+        }
+        audio.onended = function () {
+            status.innerText = "Koniec transmisji"
+            audio[0].currentTime = 0;
+        };</script>
+</body>
 
-player.on("mousedown mouseup", function () {
-  mouseDown = !mouseDown;
-});
-// $("button").click();
-</script>
-
-</body></html>
+</html>
